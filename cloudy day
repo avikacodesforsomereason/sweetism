@@ -1,0 +1,121 @@
+const canvas = document.getElementById('gameCanvas');
+
+const ctx = canvas.getContext('2d');
+
+
+
+canvas.width = window.innerWidth;
+
+canvas.height = window.innerHeight;
+
+
+
+let player = {
+
+    x: canvas.width / 2,
+
+    y: canvas.height - 50,
+
+    width: 30,
+
+    height: 30,
+
+    speed: 5
+
+};
+
+
+
+let clouds = [];
+
+
+
+function createCloud() {
+
+    let cloud = {
+
+        x: Math.random() * canvas.width,
+
+        y: Math.random() * -100,
+
+        width: Math.random() * 50 + 30,
+
+        height: Math.random() * 20 + 10,
+
+        speed: Math.random() * 2 + 1
+
+    };
+
+    clouds.push(cloud);
+
+}
+
+
+
+function drawCloud(cloud) {
+
+    ctx.fillStyle = 'white';
+
+    ctx.beginPath();
+
+    ctx.arc(cloud.x, cloud.y, cloud.width / 2, 0, Math.PI * 2);
+
+    ctx.fill();
+
+    ctx.shadowBlur = 10;
+
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+
+}
+
+
+
+function drawPlayer() {
+
+    ctx.fillStyle = '#ffcc80';
+
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+}
+
+
+
+function update() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+
+    for (let i = 0; i < clouds.length; i++) {
+
+        clouds[i].y += clouds[i].speed;
+
+        drawCloud(clouds[i]);
+
+        if (clouds[i].y > canvas.height) {
+
+            clouds.splice(i, 1);
+
+            createCloud();
+
+        }
+
+    }
+
+
+
+    drawPlayer();
+
+
+
+    requestAnimationFrame(update);
+
+}
+
+
+
+// Game loop
+
+createCloud();
+
+update();
